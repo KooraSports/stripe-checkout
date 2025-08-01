@@ -19,6 +19,8 @@ app.post('/create-checkout-session', async (req, res) => {
   try {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
+      mode: 'payment',
+      customer_creation: 'never', // ✅ لمنع خانة الإيميل
       line_items: [{
         price_data: {
           currency: 'aed',
@@ -29,7 +31,19 @@ app.post('/create-checkout-session', async (req, res) => {
         },
         quantity: 1,
       }],
-      mode: 'payment',
+      custom_fields: [ // ✅ لإضافة ملاحظات مثل موعد الحجز
+        {
+          key: 'booking_time',
+          label: {
+            type: 'custom',
+            custom: 'موعد الحجز أو أي ملاحظة',
+          },
+          type: 'text',
+          text: {
+            required: false,
+          },
+        },
+      ],
       success_url: 'https://koorasports.onrender.com/success',
       cancel_url: 'https://koorasports.onrender.com/cancel',
     });
