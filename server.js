@@ -1,40 +1,32 @@
-const express = require('express');
-const app = express();
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const dotenv = require('dotenv');
-dotenv.config();
+app.post("/create-checkout-session", async (req, res) => {
+  const { amount, notes } = req.body;
 
-app.use(express.static('public'));
-app.use(express.json());
-
-app.post('/create-checkout-session', async (req, res) => {
   try {
-    const { amount } = req.body;
-
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
+      mode: 'payment',
       line_items: [
         {
           price_data: {
             currency: 'aed',
             product_data: {
-              name: 'Koora Sports Payment',
+              name: 'Koora Sports Booking'
             },
-            unit_amount: Math.round(amount * 100), // AED to fils
+            unit_amount: Math.round(amount * 100)
           },
-          quantity: 1,
-        },
+          quantity: 1
+        }
       ],
-      mode: 'payment',
-      success_url: 'https://koorasports.onrender.com/success',
-      cancel_url: 'https://koorasports.onrender.com/cancel',
+      success_url: 'https://koorasports.ae/success',
+      cancel_url: 'https://koorasports.ae/cancel',
+      metadata: {
+        notes: notes || ''
+      }
     });
 
     res.json({ url: session.url });
-  } catch (error) {
-    console.error('❌ Stripe Error:', error);
-    res.status(500).json({ error: error.message });
+  } catch (err) {
+    console.error('Error creating checkout session:', err);
+    res.status(500).json({ error: 'Failed to create session' });
   }
 });
-
-app.listen(4242, () => console.log('✅ Server running on http://localhost:4242'));
