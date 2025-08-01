@@ -31,16 +31,13 @@ app.post('/create-checkout-session', async (req, res) => {
       }],
       custom_fields: [
         {
-          key: 'booking_time',
+          key: 'booking_note',
           label: {
             type: 'custom',
             custom: 'موعد الحجز أو أي ملاحظة',
           },
-          type: 'text',
-          text: {
-            required: false,
-          },
-        },
+          type: 'text'
+        }
       ],
       success_url: 'https://koorasports.onrender.com/success',
       cancel_url: 'https://koorasports.onrender.com/cancel',
