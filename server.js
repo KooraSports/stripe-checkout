@@ -34,7 +34,7 @@ app.post('/create-checkout-session', async (req, res) => {
           key: 'booking_note',
           label: {
             type: 'custom',
-            custom: 'موعد الحجز أو أي ملاحظة',
+            custom: 'Notes For Your Booking',
           },
           type: 'text'
         }
