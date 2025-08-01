@@ -39,8 +39,6 @@ app.post('/create-checkout-session', async (req, res) => {
           type: 'text'
         }
       ],
-      success_url: 'https://koorasports.onrender.com/success',
-      cancel_url: 'https://koorasports.onrender.com/cancel',
     });
 
     res.json({ url: session.url });
