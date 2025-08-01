@@ -6,7 +6,6 @@ const app = express();
 app.use(express.static('public'));
 app.use(express.json());
 
-// جلسة الدفع المباشرة
 app.post('/create-checkout-session', async (req, res) => {
   const { amount } = req.body;
 
@@ -14,13 +13,12 @@ app.post('/create-checkout-session', async (req, res) => {
     return res.status(400).send({ error: 'Invalid amount' });
   }
 
-  const amountInCents = Math.round(amount * 100); // تحويل للـفلس
+  const amountInCents = Math.round(amount * 100);
 
   try {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       mode: 'payment',
-      customer_creation: 'never', // ✅ لمنع خانة الإيميل
       line_items: [{
         price_data: {
           currency: 'aed',
@@ -31,7 +29,7 @@ app.post('/create-checkout-session', async (req, res) => {
         },
         quantity: 1,
       }],
-      custom_fields: [ // ✅ لإضافة ملاحظات مثل موعد الحجز
+      custom_fields: [
         {
           key: 'booking_time',
           label: {
